@@ -72,3 +72,21 @@ margin-left:60px ;
     top: 7.5px;
     left: 7.5px;
 }
+.profile{
+    position: relative;
+}
+.profile img{
+    border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+    height: 33px;
+    margin-top: -6px;
+}
+.profile-menu{
+    display: flex;
+position: absolute;
+background-color: #232323;
+
+}
