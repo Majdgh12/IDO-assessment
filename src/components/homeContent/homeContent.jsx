@@ -9,31 +9,39 @@ import { Task } from '../Task/Task';
 
 
 
-const HomeContent = ({ Tasks,setTasks}) => {
+const HomeContent = ({ Tasks, setTasks }) => {
 
-    const [quoteVisibility, setquoteVisibility] = useState(false);
 
-    // const [Tasks, setTasks] = useState(tasks);
+    
+    // function handleOnDrag(e, widgetType) {
+    //     e.dataTransfer.setData("widgetType", widgetType);
+    // }
+    
+    // function handleOnDrop(e) {
+    //     const widgetType = e.dataTransfer.getData("widgetType");
+    //     console.log("widgetType", widgetType);
+    //     setWidgets([...widgets, widgetType]);
+    // }
+    
+    // function handleDragOver(e) {
+    //     e.preventDefault();
+    // }
+    
+
+    const [quoteVisibility, setquoteVisibility] = useState(true);
+    const [hover, sethover] = useState(false);
+
+
+
+    const onHover = () => {
+        sethover(true)
+    }
+    const onblur = () => {
+        sethover(false)
+    }
 
     console.log(Tasks);
-        // useEffect(()=>{
-        //     setTasks([{
-                // taskId: 7,
-                // Title: "",
-                // Category: "",
-                // DueDate: "",
-                // Estimate: "",
-                // Importance: "",
-                // Status: "To Do",
-
-        //     },...Tasks ]);
-        //     khelasnaMnSamira()
-
-        // } ,[samira])
-    // const addTask = (task) => {
-
-    //     setTasks([...Tasks, task]);
-    // }
+    
 
     const editTask = (task) => {
         const temp = Array.from(Tasks);
@@ -58,17 +66,27 @@ const HomeContent = ({ Tasks,setTasks}) => {
         <div className='homeContent'>
             {
                 quoteVisibility && (
-                    <div className="quote-container" >
-                        <div>
+                    <div className="quote-container" onMouseOver={onHover} onMouseLeave={onblur} >
+                        <div className='quote'>
                             "Anything that can go wrong, will go wrong!"
                         </div>
-                        <div onClick={() => setquoteVisibility(false)} >
-                            x
+                        <div  >
+                            {hover && (
+
+
+                                <button onClick={() => setquoteVisibility(false)}>X</button>)
+
+                            }
+
                         </div>
                     </div>
 
                 )
             }
+
+            <div className='quote-appear' >
+                <img src='../../asset/ShowQuote.png'alt="" />
+            </div>
             <div className='tasks-container' >
                 <div className="todo">
                     <div className="todohead">
@@ -144,9 +162,9 @@ const HomeContent = ({ Tasks,setTasks}) => {
                     }
                 </div>
             </div>
+            
 
         </div>
     );
-}
-
+};
 export default HomeContent;

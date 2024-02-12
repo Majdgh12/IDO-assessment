@@ -1,6 +1,7 @@
 .HomeHeader{
     margin: 0;
     padding: 0;
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -8,10 +9,12 @@
     width: 100%;
     background-color: #232323;
 } 
-.logo img{
+.logo-header img {
+    position: absolute;
     margin-left: 10px;
-    margin-bottom: 80px;
-    width: 100%;
+    margin-top: -29px;
+    left: 0;
+    width: 100px;
     height: auto;
 }
 .search input{

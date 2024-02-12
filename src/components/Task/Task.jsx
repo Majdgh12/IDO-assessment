@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 
 
-export const Task = ({ taskId, Title, Category, DueDate, Estimate, Importance, Status, editTask }) => {
+export const Task = ({ taskId, Title, Category, DueDate, Estimate, Importance, Status, editTask,draggable }) => {
 
 
   const [editMode, seteditMode] = useState(false);

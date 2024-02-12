@@ -75,8 +75,8 @@ const Home = () => {
     // }
     return (
         <div>
-         <HomeHeader tasks={tasks} setTasks={setTasks} />
-        <HomeContent Tasks={tasks} setTasks={setTasks} />
+         <HomeHeader Tasks={Tasks} setTasks={setTasks} />
+        <HomeContent Tasks={Tasks} setTasks={setTasks} />
         </div>
     );
 }

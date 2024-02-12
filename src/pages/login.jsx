@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../asset/Logo.png'
+import logo from '../asset/Logo@2x.png'
 import menpic from '../asset/Man.svg'
 import womenpic from '../asset/Woman.svg'
 
@@ -37,17 +37,15 @@ const Login = () => {
         setFormSubmitted(true);
 
         if (!/\S+@\S+\.\S+/.test(email)) {
-            setEmailError('Please enter a valid email address!');
+            setEmailError('Email is required!');
             return;
         }
 
-        
         if (password.length < 6) {
-            setPasswordError('Password must be at least 6 characters long!');
+            setPasswordError('Password is required!');
             return;
         }
 
-        
         setEmail('');
         setPassword('');
         setEmailError('');
@@ -75,8 +73,8 @@ const Login = () => {
                             id="email"
                             value={email}
                             onChange={handleEmailChange}
-                            placeholder={formSubmitted && !email ? 'This field is required' : 'Email'}
                         />
+                        {formSubmitted && !email && <p className="error">Email is required!</p>}
                         {emailError && <p className="error">{emailError}</p>}
                     </div>
                     <div className="password">
@@ -86,8 +84,8 @@ const Login = () => {
                             id="password"
                             value={password}
                             onChange={handlePasswordChange}
-                            placeholder={formSubmitted && !password ? 'This field is required' : 'Password'}
                         />
+                        {formSubmitted && !password && <p className="error">Password is required!</p>}
                         {passwordError && <p className="error">{passwordError}</p>}
                     </div>
                     <div className="submit">
@@ -98,6 +96,5 @@ const Login = () => {
         </div>
     );
 }
-
 
 export default Login;
