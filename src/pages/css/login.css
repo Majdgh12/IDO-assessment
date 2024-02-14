@@ -31,6 +31,7 @@ body {
     display: flex;
     justify-content: flex-end;
     height: 300px;
+    margin-left: 200px;
 }
 
 .logo {

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import todoIcon from '../../asset/ToDoIcon.svg';
 import doingIcon from '../../asset/DoingIcon.svg';
 import doneIcon from '../../asset/DoneIcon.svg'
+import showQuote from '../../asset/ShowQuote.png'
 import { Task } from '../Task/Task';
 
 
@@ -12,24 +13,25 @@ import { Task } from '../Task/Task';
 const HomeContent = ({ Tasks, setTasks }) => {
 
 
-    
+
     // function handleOnDrag(e, widgetType) {
     //     e.dataTransfer.setData("widgetType", widgetType);
     // }
-    
+
     // function handleOnDrop(e) {
     //     const widgetType = e.dataTransfer.getData("widgetType");
     //     console.log("widgetType", widgetType);
     //     setWidgets([...widgets, widgetType]);
     // }
-    
+
     // function handleDragOver(e) {
     //     e.preventDefault();
     // }
-    
 
-    const [quoteVisibility, setquoteVisibility] = useState(true);
+
+    const [quoteVisiblity, setquoteVisibility] = useState(true);
     const [hover, sethover] = useState(false);
+    const [isQuoteShow, setIsQuoteShow] = useState(false);
 
 
 
@@ -41,7 +43,7 @@ const HomeContent = ({ Tasks, setTasks }) => {
     }
 
     console.log(Tasks);
-    
+
 
     const editTask = (task) => {
         const temp = Array.from(Tasks);
@@ -62,10 +64,31 @@ const HomeContent = ({ Tasks, setTasks }) => {
 
     }
 
+
+    const handleDragStart = (e, taskId) => {
+        e.dataTransfer.setData('taskId', taskId);
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (e, status) => {
+        const taskId = e.dataTransfer.getData('taskId');
+        const updatedTasks = Tasks.map((task) => {
+            if (task.taskId === taskId) {
+                return { ...task, Status: status };
+            }
+            return task;
+        });
+        setTasks(updatedTasks);
+    };
+
+
     return (
         <div className='homeContent'>
             {
-                quoteVisibility && (
+                quoteVisiblity && (
                     <div className="quote-container" onMouseOver={onHover} onMouseLeave={onblur} >
                         <div className='quote'>
                             "Anything that can go wrong, will go wrong!"
@@ -74,7 +97,8 @@ const HomeContent = ({ Tasks, setTasks }) => {
                             {hover && (
 
 
-                                <button onClick={() => setquoteVisibility(false)}>X</button>)
+                                <button onClick={() => { setquoteVisibility(false); setIsQuoteShow(true) }}>X</button>
+                            )
 
                             }
 
@@ -84,9 +108,11 @@ const HomeContent = ({ Tasks, setTasks }) => {
                 )
             }
 
-            <div className='quote-appear' >
-                <img src='../../asset/ShowQuote.png'alt="" />
-            </div>
+            {isQuoteShow 
+            &&
+                <div className='quote-appear'  onClick={() => { setquoteVisibility(true); setIsQuoteShow(false) }}>
+                <img src={showQuote} alt="" onClick={() => { setquoteVisibility(true); setIsQuoteShow(false) }} />
+            </div>}
             <div className='tasks-container' >
                 <div className="todo">
                     <div className="todohead">
@@ -162,7 +188,7 @@ const HomeContent = ({ Tasks, setTasks }) => {
                     }
                 </div>
             </div>
-            
+
 
         </div>
     );
