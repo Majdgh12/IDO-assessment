@@ -51,11 +51,11 @@ const HomeContent = ({ Tasks, setTasks }) => {
         temp.forEach((t) => {
             if (t.taskId === task.taskId) {
                 // logic
-                t.Title = task.Title;
-                t.Category = task.Category;
-                t.Estimate = task.Estimate;
-                t.Importance = task.Importance
-                t.DueDate = task.DueDate
+                t.name = task.name;
+                t.category = task.category;
+                t.estimate = task.estimate;
+                t.importance = task.importance
+                t.dueDate = task.dueDate
             }
         })
 
@@ -127,11 +127,11 @@ const HomeContent = ({ Tasks, setTasks }) => {
                                     <Task
                                         key={t.taskId}
                                         taskId={t.taskId}
-                                        Title={t.Title}
-                                        Category={t.Category}
-                                        DueDate={t.DueDate}
-                                        Estimate={t.Estimate}
-                                        Importance={t.Importance}
+                                        name={t.name}
+                                        category={t.category}
+                                        dueDate={t.dueDate}
+                                        estimate={t.estimate}
+                                        importance={t.importance}
                                         editTask={editTask} />
 
                                 );
@@ -153,11 +153,11 @@ const HomeContent = ({ Tasks, setTasks }) => {
                                 <Task
                                     key={t.taskId}
                                     taskId={t.taskId}
-                                    Title={t.Title}
-                                    Category={t.Category}
-                                    DueDate={t.DueDate}
-                                    Estimate={t.Estimate}
-                                    Importance={t.Importance}
+                                    name={t.name}
+                                    category={t.category}
+                                    dueDate={t.dueDate}
+                                    estimate={t.estimate}
+                                    importance={t.importance}
                                     editTask={editTask} />
                             );
                         }
@@ -176,11 +176,11 @@ const HomeContent = ({ Tasks, setTasks }) => {
                                 <Task
                                     key={t.taskId}
                                     taskId={t.taskId}
-                                    Title={t.Title}
-                                    Category={t.Category}
-                                    DueDate={t.DueDate}
-                                    Estimate={t.Estimate}
-                                    Importance={t.Importance}
+                                    name={t.name}
+                                    category={t.category}
+                                    dueDate={t.dueDate}
+                                    estimate={t.estimate}
+                                    importance={t.importance}
                                     editTask={editTask} />
                             );
                         }

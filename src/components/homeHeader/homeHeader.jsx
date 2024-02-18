@@ -7,10 +7,13 @@ import profile from '../../asset/Bitmap.png';
 import logout from '../../asset/Icon ionic-ios-log-out.png';
 import '../homeHeader/homeHeader.css';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useNavigate}  from 'react-router-dom';
 
 const HomeHeader = ({ Tasks, setTasks }) => {
     const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
 
     const toggleProfileMenu = () => {
         setProfileMenuOpen(!isProfileMenuOpen);
@@ -19,11 +22,11 @@ const HomeHeader = ({ Tasks, setTasks }) => {
     const handleAddTask = () => {
         const newTask = {
             taskId: Tasks.length + 1, // Generate a unique taskId
-            Title: '',
-            Category: '',
-            DueDate: '',
-            Estimate: '',
-            Importance: '',
+            name: '',
+            category: '',
+            dueDate: '',
+            estimate: '',
+            importance: '',
             Status: 'To Do',
         };
         setTasks([newTask, ...Tasks]); // Add the new task to the Tasks array
@@ -40,11 +43,11 @@ const handleSearch = (e) => {
     } else {
         // If the query is not empty, filter the tasks based on the query
         const filteredTasks = originalTasks.filter((task) =>
-            (task.Title && task.Title.toLowerCase().includes(query)) ||
-            (task.Category && task.Category.toLowerCase().includes(query)) ||
-            (task.DueDate && task.DueDate.toLowerCase().includes(query)) ||
-            (task.Estimate && task.Estimate.toLowerCase().includes(query)) ||
-            (task.Importance && task.Importance.toLowerCase().includes(query))
+            (task.name && task.name.toLowerCase().includes(query)) ||
+            (task.category && task.category.toLowerCase().includes(query)) ||
+            (task.dueDate && task.dueDate.toLowerCase().includes(query)) ||
+            (task.estimate && task.estimate.toLowerCase().includes(query)) ||
+            (task.importance && task.importance.toLowerCase().includes(query))
         );
         setTasks(filteredTasks);
     }
@@ -76,7 +79,11 @@ const handleSearch = (e) => {
                         <div>{/* Insert the email */}</div>
                         <div className='logout'>
                         <p style={{ color: 'white' }}>logout</p>
-                       <Link to="/"> <img src={logout}  alt="" /></Link></div>
+                       <button onClick={()=>{
+                        Cookies.remove(`token`)
+                        navigate("/")
+                       }}><img src={logout} alt="" /></button>
+                       </div>
                     </div>
                 )}
             </div>
