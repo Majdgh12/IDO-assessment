@@ -1,114 +1,110 @@
 import React from 'react'
 import './Task.css'
 import { useState } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 
 
-export const Task = ({ taskId, Title, Category, DueDate, Estimate, Importance, Status, editTask,draggable }) => {
+export const Task = ({ id, name, category, dueDate, estimate, importance, status, editTask, draggable }) => {
 
 
   const [editMode, seteditMode] = useState(false);
-  const [TaskTitle, setTaskTitle] = useState(Title);
-  const [TaskCategory, setTaskCategory] = useState(Category);
-  const [TaskDueDate, setTaskDueDate] = useState(DueDate);
-  const [TaskEstimate, setTaskEstimate] = useState(Estimate);
-  const [TaskImportance, setTaskImportance] = useState(Importance);
+  const [TaskTitle, setTaskTitle] = useState(name);
+  const [Taskcategory, setTaskcategory] = useState(category);
+  const [TaskdueDate, setTaskdueDate] = useState(dueDate);
+  const [Taskestimate, setTaskestimate] = useState(estimate);
+  const [Taskimportance, setTaskimportance] = useState(importance);
+  const [TaskStatus, setTaskStatus] = useState(status);
 
 
-
-  console.log(Category);
 
   const setEditModeOn = (e) => {
-
-
     seteditMode(true);
   }
   const handleTitleChange = (e) => {
     const TitleValue = e.target.value;
-
     setTaskTitle(TitleValue);
-
-
   }
-  const handleDueDateChange = (e) => {
-    const DueDateValue = e.target.value;
-
-    setTaskDueDate(DueDateValue);
-
-
+  const handledueDateChange = (e) => {
+    const dueDateValue = e.target.value;
+    setTaskdueDate(dueDateValue);
   }
-
-  const handleCategoryChange = (e) => {
+  const handlecategoryChange = (e) => {
     const categoryValue = e.target.value;
-
-    setTaskCategory(categoryValue);
-
-
+    setTaskcategory(categoryValue);
   }
-  const handleEstimateChange = (e) => {
+  const handleestimateChange = (e) => {
     const estimateValue = e.target.value;
-
-    setTaskEstimate(estimateValue);
-
-
+    setTaskestimate(estimateValue);
   }
-  const handleImportanceChange = (e) => {
+  const handleimportanceChange = (e) => {
     const importanceValue = e.target.value;
-
-    setTaskImportance(importanceValue);
-
-
+    setTaskimportance(importanceValue);
   }
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.stopPropagation();
+    console.log(id)
+    console.log(TaskStatus)
+    try {
+      await axios.put(
+        `https://localhost:7231/api/Items/updateTask/${id}`,
+        {
+          name: TaskTitle,
+          category: Taskcategory,
+          estimate: Taskestimate,
+          dueDate: TaskdueDate,
+          importance: Taskimportance,
+          status: TaskStatus
 
+        },
+        {
+          headers: {
 
+            Authorization: Cookies.get('token')
+          }
+        }
+      );
+      seteditMode(false);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
 
-    editTask({
-      taskId: taskId,
-      Title: TaskTitle,
-      Category: TaskCategory,
-      Estimate: TaskEstimate,
-      DueDate: TaskDueDate,
-      Importance: TaskImportance
-    })
-
-    seteditMode(false);
-  }
 
   const doNothing = () => {
   }
 
   return (
     <div className={`Task ${editMode ? 'edit-mode' : ''}`} onClick={setEditModeOn}>
-      <div className="task-field Title"><input type="text" size={40} value={TaskTitle} onChange={editMode ? handleTitleChange : doNothing} name="" id="" /></div>
+      <div className="task-field name"><input type="text" size={40} value={TaskTitle} onChange={editMode ? handleTitleChange : doNothing} name="" id="" /></div>
       <div className="task-field category">
-        <p className='category-label'>Category</p>
-        <input type="text" value={TaskCategory} onChange={editMode ? handleCategoryChange : doNothing} />
+        <p className='category-label'>category</p>
+        <input type="text" value={Taskcategory} onChange={editMode ? handlecategoryChange : doNothing} />
       </div>
       <div className="task-field Due-date">
         <p className='due-date-label'>Due date</p>
-        <input type="text" value={TaskDueDate} onChange={editMode ? handleDueDateChange : doNothing} />
+        <input type="text" value={TaskdueDate} onChange={editMode ? handledueDateChange : doNothing} />
       </div>
-      <div className="task-field Estimate">
-        <p className='Estimate-label'>Estimate</p>
-        <input type="text" value={TaskEstimate} onChange={editMode ? handleEstimateChange : doNothing} />
+      <div className="task-field estimate">
+        <p className='estimate-label'>estimate</p>
+        <input type="text" value={Taskestimate} onChange={editMode ? handleestimateChange : doNothing} />
       </div>
-      <div className="task-field Importance">
-        <p className='Importance-label'>Importance</p>
+      <div className="task-field importance">
+        <p className='importance-label'>importance</p>
         {editMode ? (
           <div className='select-wrapper'>
-            <select name="" id="" value={TaskImportance} onChange={handleImportanceChange}>
-              <option value="high" selected={TaskImportance === "high"} key="" >high</option>
-              <option value="medium" selected={TaskImportance === "medium"} key="">medium</option>
-              <option value="low" selected={TaskImportance === "low"} key="">low</option>
-              <option value="none" selected={TaskImportance === ""} key="">none</option>
+            <select name="" id="" value={Taskimportance} onChange={handleimportanceChange}>
+              <option value="high" selected={Taskimportance === "high"} key="" >high</option>
+              <option value="medium" selected={Taskimportance === "medium"} key="">medium</option>
+              <option value="low" selected={Taskimportance === "low"} key="">low</option>
+              <option value="none" selected={Taskimportance === ""} key="">none</option>
             </select>
           </div>
         ) : (
           <div>
-            <input type="text" value={TaskImportance} onChange={editMode ? handleImportanceChange : doNothing} />
+            <input type="text" value={Taskimportance} onChange={editMode ? handleimportanceChange : doNothing} />
           </div>
         )}
       </div>

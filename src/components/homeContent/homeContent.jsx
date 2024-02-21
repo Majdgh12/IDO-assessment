@@ -1,195 +1,183 @@
-import React, { useEffect } from 'react';
-import '../homeContent/homeContent.css'
-import { useState } from 'react';
+import React, { useState } from 'react';
+import '../homeContent/homeContent.css';
+import { Task } from '../Task/Task';
+import showQuote from '../../asset/ShowQuote.png'
 import todoIcon from '../../asset/ToDoIcon.svg';
 import doingIcon from '../../asset/DoingIcon.svg';
-import doneIcon from '../../asset/DoneIcon.svg'
-import showQuote from '../../asset/ShowQuote.png'
-import { Task } from '../Task/Task';
-
-
-
+import doneIcon from '../../asset/DoneIcon.svg';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const HomeContent = ({ Tasks, setTasks }) => {
-
-
-
-    // function handleOnDrag(e, widgetType) {
-    //     e.dataTransfer.setData("widgetType", widgetType);
-    // }
-
-    // function handleOnDrop(e) {
-    //     const widgetType = e.dataTransfer.getData("widgetType");
-    //     console.log("widgetType", widgetType);
-    //     setWidgets([...widgets, widgetType]);
-    // }
-
-    // function handleDragOver(e) {
-    //     e.preventDefault();
-    // }
-
-
-    const [quoteVisiblity, setquoteVisibility] = useState(true);
-    const [hover, sethover] = useState(false);
+    const [quoteVisibility, setQuoteVisibility] = useState(true);
+    const [hover, setHover] = useState(false);
     const [isQuoteShow, setIsQuoteShow] = useState(false);
 
-
-
     const onHover = () => {
-        sethover(true)
-    }
-    const onblur = () => {
-        sethover(false)
-    }
+        setHover(true);
+    };
 
-    console.log(Tasks);
-
+    const onBlur = () => {
+        setHover(false);
+    };
 
     const editTask = (task) => {
         const temp = Array.from(Tasks);
 
         temp.forEach((t) => {
-            if (t.taskId === task.taskId) {
-                // logic
+            if (t.id === task.id) {
                 t.name = task.name;
                 t.category = task.category;
                 t.estimate = task.estimate;
-                t.importance = task.importance
-                t.dueDate = task.dueDate
+                t.importance = task.importance;
+                t.dueDate = task.dueDate;
             }
-        })
-
+        });
 
         setTasks(temp);
+    };
 
-    }
-
-
-    const handleDragStart = (e, taskId) => {
-        e.dataTransfer.setData('taskId', taskId);
+    const handleDragStart = (e, task) => {
+        e.dataTransfer.setData('task', JSON.stringify(task));
     };
 
     const handleDragOver = (e) => {
         e.preventDefault();
+        e.target.style.border = '2px dashed #000';
+    };
+
+    const handleDragLeave = (e) => {
+        e.target.style.border = 'none';
     };
 
     const handleDrop = (e, status) => {
-        const taskId = e.dataTransfer.getData('taskId');
-        const updatedTasks = Tasks.map((task) => {
-            if (task.taskId === taskId) {
-                return { ...task, Status: status };
-            }
-            return task;
-        });
-        setTasks(updatedTasks);
+        e.preventDefault();
+        const draggedTask = JSON.parse(e.dataTransfer.getData('task'));
+        draggedTask.status = status;
+        axios.put(`https://localhost:7231/api/Items/updateTask/${draggedTask.id}`, draggedTask)
+            .then((response) => {
+                console.log('Task status updated successfully:', response.data);
+                setTasks(prevTasks => {
+                    const updatedTasks = prevTasks.map(task => {
+                        if (task.id === draggedTask.id) {
+                            return draggedTask;
+                        }
+                        return task;
+                    });
+                    return updatedTasks;
+                });
+            })
+            .catch((error) => {
+                console.error('Error updating task status:', error);
+            });
     };
-
 
     return (
         <div className='homeContent'>
-            {
-                quoteVisiblity && (
-                    <div className="quote-container" onMouseOver={onHover} onMouseLeave={onblur} >
-                        <div className='quote'>
-                            "Anything that can go wrong, will go wrong!"
-                        </div>
-                        <div  >
-                            {hover && (
-
-
-                                <button onClick={() => { setquoteVisibility(false); setIsQuoteShow(true) }}>X</button>
-                            )
-
-                            }
-
-                        </div>
+            {quoteVisibility && (
+                <div className="quote-container" onMouseOver={onHover} onMouseLeave={onBlur}>
+                    <div className='quote'>
+                        "Anything that can go wrong, will go wrong!"
                     </div>
+                    <div>
+                        {hover && (
+                            <button onClick={() => { setQuoteVisibility(false); setIsQuoteShow(true); }}>X</button>
+                        )}
+                    </div>
+                </div>
+            )}
+            {isQuoteShow && (
+                <div className='quote-appear' onClick={() => { setQuoteVisibility(true); setIsQuoteShow(false); }}>
+                    <img src={showQuote} alt="" onClick={() => { setQuoteVisibility(true); setIsQuoteShow(false); }} />
+                </div>
+            )}
 
-                )
-            }
-
-            {isQuoteShow 
-            &&
-                <div className='quote-appear'  onClick={() => { setquoteVisibility(true); setIsQuoteShow(false) }}>
-                <img src={showQuote} alt="" onClick={() => { setquoteVisibility(true); setIsQuoteShow(false) }} />
-            </div>}
-            <div className='tasks-container' >
-                <div className="todo">
+            <div className='tasks-container'>
+                <div className="todo" onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={(e) => handleDrop(e, 'toDo')}>
+                    <div className="sticky" >
                     <div className="todohead">
                         <img src={todoIcon} alt="" />
                         <h3>ToDo</h3>
                     </div>
-
-                    {
-                        Tasks.map((t) => {
-                            if (t.Status === "To Do") {
-                                return (
+                    </div>
+                    {Tasks.map((t) => {
+                        if (t.status === 'toDo') {
+                            return (
+                                <div key={t.id} onDragStart={(e) => handleDragStart(e, t)} draggable>
                                     <Task
-                                        key={t.taskId}
-                                        taskId={t.taskId}
+                                        id={t.id}
+                                        name={t.name}
+                                        status={t.status}
+                                        category={t.category}
+                                        dueDate={t.dueDate}
+                                        estimate={t.estimate}
+                                        importance={t.importance}
+                                        editTask={editTask}
+                                        key={t.id}
+                                    />
+                                </div>
+                            );
+                        }
+                        return null;
+                    })}
+                </div>
+                <div className="doing" onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={(e) => handleDrop(e, 'doing')}>
+                    <div className="sticky">
+                    <div className="doinghead">
+                        <img src={doingIcon} alt="" />
+                        <h3>Doing</h3>
+                    </div>
+                    </div>
+                    {Tasks.map((t) => {
+                        if (t.status === 'doing') {
+                            return (
+                                <div key={t.id} onDragStart={(e) => handleDragStart(e, t)} draggable>
+                                    <Task
+                                        id={t.id}
+                                        name={t.name}
+                                        status={t.status}
+                                        category={t.category}
+                                        dueDate={t.dueDate}
+                                        estimate={t.estimate}
+                                        importance={t.importance}
+                                        editTask={editTask}
+                                        key={t.id}
+                                    />
+                                </div>
+                            );
+                        }
+                        return null;
+                    })}
+                </div>
+                <div className="done" onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={(e) => handleDrop(e, 'done')}>
+                    <div className="sticky">
+                    <div className="donehead">
+                        <img src={doneIcon} alt="" />
+                        <h3>Done</h3>
+                    </div>
+                    </div>
+                    {Tasks.map((t) => {
+                        if (t.status === 'done') {
+                            return (
+                                <div key={t.id} onDragStart={(e) => handleDragStart(e, t)} draggable>
+                                    <Task
+                                        id={t.id}
+                                        status={t.status}
                                         name={t.name}
                                         category={t.category}
                                         dueDate={t.dueDate}
                                         estimate={t.estimate}
                                         importance={t.importance}
-                                        editTask={editTask} />
-
-                                );
-                            }
-                        })
-                    }
-
-
-                </div>
-
-                <div className="doing">
-                    <div className="doinghead">
-                        <img src={doingIcon} alt="" />
-                        <h3>Doing</h3>
-                    </div>
-                    {Tasks.map((t) => {
-                        if (t.Status === "Doing") {
-                            return (
-                                <Task
-                                    key={t.taskId}
-                                    taskId={t.taskId}
-                                    name={t.name}
-                                    category={t.category}
-                                    dueDate={t.dueDate}
-                                    estimate={t.estimate}
-                                    importance={t.importance}
-                                    editTask={editTask} />
+                                        editTask={editTask}
+                                        key={t.id}
+                                    />
+                                </div>
                             );
                         }
-                    })
-                    }
-                </div>
-                <div className="done">
-                    <div className="donehead">
-                        <img src={doneIcon} alt="" />
-                        <h3>Done</h3>
-
-                    </div>
-                    {Tasks.map((t) => {
-                        if (t.Status === "Done") {
-                            return (
-                                <Task
-                                    key={t.taskId}
-                                    taskId={t.taskId}
-                                    name={t.name}
-                                    category={t.category}
-                                    dueDate={t.dueDate}
-                                    estimate={t.estimate}
-                                    importance={t.importance}
-                                    editTask={editTask} />
-                            );
-                        }
-                    })
-                    }
+                        return null;
+                    })}
                 </div>
             </div>
-
-
         </div>
     );
 };

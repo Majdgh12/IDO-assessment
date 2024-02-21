@@ -1,26 +1,26 @@
-.body{
-    overflow: auto;
-}
 .homeContent {
     width: 100%;
-    min-height: 100vh; 
+    position: relative;
+    height: 92vh; 
+    margin-bottom: 200px;
     border: 1px solid var(--unnamed-color-707070);
     background: #5B5E60 0% 0% no-repeat padding-box;
     opacity: 1;
-    overflow: auto;
-   
+    overflow-y: auto;
 }
 
-.tasks-container{
+.tasks-container {
     margin-top: 20px;
     padding-left: 20px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 20px;
     max-width: 1100px;
+    height: auto; 
 }
-.todohead,.doinghead,.donehead{
-    position: sticky;
+
+.todohead, .doinghead, .donehead {
+   
     display: flex;
     font-size: 18px;
     column-gap: 20px;
@@ -28,50 +28,55 @@
     background-color: #212529;
     color: white;
     border-radius: 10px;
-
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
+   
 }
 
-.todo,.doing,.done{
-    
-   
+    .sticky{
+        top: 0;
+        z-index: 1;
+        position: sticky;
+        background-color: #5B5E60;
+        padding:10px 0 10px 0;
+    }
+
+.todo, .doing, .done {
     display: flex;
     flex-direction: column;
     row-gap: 20px;
 }
+
 .quote-container {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     background: transparent linear-gradient(180deg, #6E4C85 0%, #2D2B52 100%) 0% 0% no-repeat padding-box;
     opacity: 1;
-   
 }
-.quote-container:hover{
-    opacity: 0.8;
 
+.quote-container:hover {
+    opacity: 0.8;
 }
-.quote{
+
+.quote {
     padding: 20px;
     color: white;
     font-size: large;
     margin-left: 50px;
 }
-.quote-container button{
+
+.quote-container button {
     padding: 20px;
     color: white;
     background-color: transparent;
     outline: 0;
     border: 0;
 }
-.quote-appear{
-display: flex;
-justify-content: center;
-align-items: center;
-margin-left: 95%;
-width: 50px;
-height: 50px;
+
+.quote-appear {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 95%;
+    width: 50px;
+    height: 50px;
 }

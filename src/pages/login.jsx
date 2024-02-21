@@ -4,7 +4,7 @@ import menpic from '../asset/Man.svg'
 import womenpic from '../asset/Woman.svg'
 import axios from 'axios';
 import Cookies from "js-cookie";
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom'; 
 
 import './css/login.css'
 
@@ -13,60 +13,59 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [authError, setAuthError] = useState('');
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const [authMessage, setAuthMessage] = useState('');
 
-    const navigate = useNavigate(); // Use useNavigate to get the navigate function
+    const navigate = useNavigate(); 
 
     const handleEmailChange = (e) => {
         const value = e.target.value;
         setEmail(value);
-        if (!/\S+@\S+\.\S+/.test(value)) {
-            setEmailError('Please enter a valid email address');
-        } else {
-            setEmailError('');
-        }
+        setEmailError(value ? '' : 'Email is required');
     };
 
     const handlePasswordChange = (e) => {
         const value = e.target.value;
         setPassword(value);
-        if (value.length < 6) {
-            setPasswordError('Password must be at least 6 characters long');
-        } else {
-            setPasswordError('');
-        }
+        setPasswordError(value ? '' : 'Password is required');
     };
 
     const handleSubmit = () => {
         // Set formSubmitted to true to show errors
         setFormSubmitted(true);
 
-        if (!/\S+@\S+\.\S+/.test(email)) {
-            setEmailError('Email is required!');
-            return;
+        // Reset any previous authentication error message
+        setAuthError('');
+
+        if (!email) {
+            setEmailError('Email is required');
         }
 
-        if (password.length < 6) {
-            setPasswordError('Password is required!');
+        if (!password) {
+            setPasswordError('Password is required');
+        }
+
+        if (!email || !password) {
             return;
         }
 
         axios
-        
-        .post(`https://localhost:7231/api/Items/login`, {
+            .post(`https://localhost:7231/api/Items/login`, {
                 email,
                 password,
             })
             .then((response) => {
+                const jsonData =response.config.data
+                const dataObject = JSON.parse(jsonData);
+                const email = dataObject.email;
+                Cookies.set(`email`,email)
                 console.log(response)
                 console.log(response.data.token.result.token)
                 Cookies.set(`token`, `Bearer ${response.data.token.result.token}`);
-                window.sessionStorage.setItem(`email`, email);
                 navigate(`/Home`); // Use the navigate function
             })
             .catch(() => {
-                setAuthMessage(`Incorrect Email Or Password!`);
+                setAuthError(`Incorrect Email Or Password!`);
             });
     };
 
@@ -93,8 +92,7 @@ const Login = () => {
                                 value={email}
                                 onChange={handleEmailChange}
                             />
-                            {formSubmitted && !email && <p className="error">Email is required!</p>}
-                            {emailError && <p className="error">{emailError}</p>}
+                            {formSubmitted && emailError && <p className="error">{emailError}</p>}
                         </div>
                         <div className="password">
                             <label htmlFor="password">Password</label>
@@ -104,11 +102,11 @@ const Login = () => {
                                 value={password}
                                 onChange={handlePasswordChange}
                             />
-                            {formSubmitted && !password && <p className="error">Password is required!</p>}
-                            {passwordError && <p className="error">{passwordError}</p>}
+                            {formSubmitted && passwordError && <p className="error">{passwordError}</p>}
                         </div>
                         <div className="submit">
                             <button className='submit' onClick={handleSubmit}>SIGN IN</button>
+                            {formSubmitted && authError && <p className="error">{authError}</p>}
                         </div>
                     </div>
                 </div>

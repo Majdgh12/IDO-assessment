@@ -4,7 +4,7 @@ body {
 
 .login {
     display: flex;
-    height: 100vh; /* Make it full screen */
+    height: 100vh;
 }
 
 .loginDesign {
@@ -40,14 +40,14 @@ body {
     align-items: center;
     height: 100%;
     width: 40%;
-    
+
 }
 
 .logo img {
-    
+
     width: 450px;
     height: 300px;
-    
+
 }
 
 .loginForm {
@@ -140,8 +140,9 @@ body {
     -ms-border-radius: 12px;
     -o-border-radius: 12px;
 }
-.submit:hover{
+
+.submit:hover {
     cursor: pointer;
-    opacity:0.8;
+    opacity: 0.8;
     outline: 0;
 }
